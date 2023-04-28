@@ -95,6 +95,31 @@ class Grafo{
         return vertice;
      }
 
+     public void buscaEmProfundidade(Integer pos){
+        ArrayList<Vertice> tempDescoberta = new ArrayList<Vertice>();
+        ArrayList<Vertice> tempoTermino = new ArrayList<Vertice>();
+        ArrayList<Vertice> pai = new ArrayList<Vertice>();
+        Vertice atualVertice = this.getVertice(pos);
+        tempDescoberta.add(atualVertice);
+        tempoTermino.add(atualVertice);
+  
+        while(tempoTermino.size() > 0){
+           Vertice visitado = tempoTermino.get(0);
+           for(int i =0; i < visitado.getArestasSaida().size(); i++){
+              Vertice vizinhoVertice = visitado.getArestasSaida().get(i).getFim();
+              System.out.println(vizinhoVertice.getDado());
+              if(!tempDescoberta.contains(vizinhoVertice)){//já foi marcado
+                 tempoTermino.add(vizinhoVertice);
+                 //buscaEmProfundidade(vizinhoVertice.getDado());
+                 System.out.println(vizinhoVertice.getDado());
+                 tempDescoberta.add(vizinhoVertice);
+              }
+           }
+           tempoTermino.remove(0);
+        }
+  
+     }
+
 
 }
 class Tp01Grafos{
