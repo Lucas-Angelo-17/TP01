@@ -166,10 +166,10 @@ class Tp01Grafos{
 
       ArrayList<Vertice> percorridos = new ArrayList<Vertice>();
 
-      System.out.println("digite1");
+      System.out.println("digite o vértice de inicio");
       int um = sc.nextInt();
 
-      System.out.println("digite2");
+      System.out.println("digite o vértice destino");
       int dois = sc.nextInt();
       
 
@@ -184,37 +184,26 @@ class Tp01Grafos{
 
    public static int acharCiclo(int inicio, int destino, Grafo grafo, boolean containsVInicio, boolean containsVDestino, Vertice atual, ArrayList<Vertice> percorridos){
 
-      //System.out.println("chamado: " + atual);
       try{
-        // Vertice tmp = grafo.getVertice(inicio);
-         // for (int j=0; j<percorridos.size(); j++) {
-         //    int curr = percorridos.get(j).getDado();
-         
-         //    System.out.println(curr);
-         // }
-         percorridos.add(atual);
-         ArrayList<Aresta> arestasSaida = atual.getArestasSaida();
-         for(int i=0; i<arestasSaida.size(); i++){
-            if(arestasSaida.get(i).getFim().getDado() == destino){
+         percorridos.add(atual); //adiciona o vértice atual no array de vértices percorridos
+         ArrayList<Aresta> arestasSaida = atual.getArestasSaida(); //pega todas as arestas de saída do vértice atual
+         for(int i=0; i<arestasSaida.size(); i++){ //precorre todos os vértices sucessores do vértice atual
+            if(arestasSaida.get(i).getFim().getDado() == destino){ //caso o vértice sucessor seja o vértice de destino
                containsVDestino = true;
             }
-            else if(arestasSaida.get(i).getFim().getDado() == inicio){
+            else if(arestasSaida.get(i).getFim().getDado() == inicio){ //caso o vértice sucessor seja o vértice de inicio
                if(containsVDestino){
                   containsVInicio = true;
-                  return 1;
+                  return 1; //retorna 1 pois o ciclo foi encontrado
                }
             }
             if(percorridos.contains(arestasSaida.get(i).getFim())){
-               // System.out.println("dadwa");
-               // System.out.println(arestasSaida.get(i).getFim().getDado());
-               // System.out.println("chegou: ");
-               // return 2;
-               // break;
+            
             }
             else{
-               int result = acharCiclo(inicio, destino, grafo, containsVInicio, containsVDestino, arestasSaida.get(i).getFim(), percorridos);
+               int result = acharCiclo(inicio, destino, grafo, containsVInicio, containsVDestino, arestasSaida.get(i).getFim(), percorridos); 
                //System.out.println(result);
-               if(result == 1){
+               if(result == 1){ //caso tenha sido encontrado o ciclo, ou não, retorna os respectivos valores
                   return result;
                }
                else if(result == 0){
@@ -223,10 +212,10 @@ class Tp01Grafos{
             }
          }
       }catch(Exception e){
-         return 3;
+         return 3; //retorna 3 caso tenha acontecido algum erro
       }
 
 
-      return 0;
+      return 0; //caso não tenha sido encontrado 
    }
 }
