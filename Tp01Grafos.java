@@ -103,31 +103,51 @@ class Grafo{
         return vertice;
      }
 
-     public void buscaEmProfundidade(Integer pos){
-        ArrayList<Vertice> tempDescoberta = new ArrayList<Vertice>();
-        ArrayList<Vertice> tempoTermino = new ArrayList<Vertice>();
-        ArrayList<Vertice> pai = new ArrayList<Vertice>();
-        Vertice atualVertice = this.getVertice(pos);
-        tempDescoberta.add(atualVertice);
-        tempoTermino.add(atualVertice);
-  
-        while(tempoTermino.size() > 0){
-           Vertice visitado = tempoTermino.get(0);
-           for(int i =0; i < visitado.getArestasSaida().size(); i++){
-              Vertice vizinhoVertice = visitado.getArestasSaida().get(i).getFim();
-              System.out.println(vizinhoVertice.getDado());
-              if(!tempDescoberta.contains(vizinhoVertice)){//já foi marcado
-                 tempoTermino.add(vizinhoVertice);
-                 //buscaEmProfundidade(vizinhoVertice.getDado());
-                 System.out.println(vizinhoVertice.getDado());
-                 tempDescoberta.add(vizinhoVertice);
-              }
-           }
-           tempoTermino.remove(0);
-        }
-  
-     }
+     public Integer buscaEmLargura(){
+      ArrayList<Vertice> tempDescoberta = new ArrayList<Vertice>();
+      ArrayList<Vertice> tempoTermino = new ArrayList<Vertice>();
 
+      Vertice atualVertice = this.vertices.get(0);
+      System.out.println("Dado do vertice atual: " + atualVertice.getDado() + "\n");
+
+      tempDescoberta.add(atualVertice);
+      tempoTermino.add(atualVertice);
+
+      int num_vertices = 0; 
+
+      while(tempoTermino.size() > 0){
+         Vertice visitado = tempoTermino.get(0);
+         for(int i =0; i < visitado.getArestasSaida().size(); i++){
+            Vertice vizinhoVertice = visitado.getArestasSaida().get(i).getFim();
+            
+            if(!tempDescoberta.contains(vizinhoVertice)){//já foi marcado
+             tempDescoberta.add(vizinhoVertice);  
+             tempoTermino.add(vizinhoVertice);
+
+               //System.out.println(vizinhoVertice.getDado());
+               
+            }
+         }
+         tempoTermino.remove(0);
+         num_vertices++;
+      }
+      //System.out.println("Numero de vertices passados pela busca: " + num_vertices);
+      return num_vertices;
+
+   }
+
+   public  boolean is_Articulacao(Integer n, Integer totalVertices) {
+      Vertice atualVertice = this.getVertice(n);
+      this.vertices.remove(atualVertice); // remove o vertice do grafo
+      int qnt_busca = buscaEmLargura(); //Faz a busca semo vértice e retorna a quantidade de vertices que a busca passou
+      //System.out.print(qnt_busca);
+      if(qnt_busca == 100){
+         return true;  //Ele
+      }
+      else 
+      return false;
+     
+     }
 
 }
 
@@ -136,12 +156,13 @@ class Tp01Grafos{
    public static void main(String[] args) {
       Grafo grafo = new Grafo();
 
-      File file = new File("graph-test-50000.txt");
+      File file = new File("graph-test-100.txt");
       Scanner sc = new Scanner(System.in);
+      int numTotalVertices = 0;
 
       try{
          Scanner entrada = new Scanner(file);
-         int numTotalVertices = entrada.nextInt();
+         numTotalVertices = entrada.nextInt();
          //System.out.println(numTotalVertices);
          int numTotalArestas = entrada.nextInt();
          //System.out.println(numTotalArestas);
@@ -164,7 +185,15 @@ class Tp01Grafos{
          System.out.println(e.getMessage());
       }
 
-      ArrayList<Vertice> percorridos = new ArrayList<Vertice>();
+      System.out.println("Qual método para testar: ");
+      System.out.println("Digite 0: Método de verificar ciclos.");
+      System.out.println("Digite 1: Método de verificar articulações.");
+      System.out.println("Digite 2: Método de Tarjan.");
+
+      int operacao = sc.nextInt();
+
+      if(operacao == 0){
+         ArrayList<Vertice> percorridos = new ArrayList<Vertice>();
 
       System.out.println("digite o vértice de inicio");
       int um = sc.nextInt();
@@ -179,6 +208,17 @@ class Tp01Grafos{
       System.out.println("(3 significa houve um erro)");
 
       sc.close();
+      }
+      else if(operacao == 1){
+         for(int i = 1; i < numTotalVertices; i ++){
+            boolean resposta = grafo.is_Articulacao(i, numTotalVertices);
+         if(resposta == true){
+            System.out.print("O vértice escolhido não é uma articulação. ");
+         }else
+         System.out.print("O vértice escolhido é uma articulação.");
+         }
+      }
+      
 
    }
 
