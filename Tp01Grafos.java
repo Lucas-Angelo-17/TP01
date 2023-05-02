@@ -246,9 +246,9 @@ class Tp01Grafos{
                if(result == 1){ //caso tenha sido encontrado o ciclo, ou não, retorna os respectivos valores
                   return result;
                }
-               else if(result == 0){
-                  return result;
-               }
+//                else if(result == 0){
+//                   return result;
+//                }
             }
          }
       }catch(Exception e){
