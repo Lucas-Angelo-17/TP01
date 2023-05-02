@@ -1,6 +1,10 @@
 import java.util.Scanner;
 import javax.sound.midi.VoiceStatus;
+
+import java.io.File;
 import java.util.ArrayList;
+
+
 class Vertice{
     private int dado;
     private ArrayList<Aresta> arestasEntrada;
@@ -36,6 +40,8 @@ class Vertice{
     }
 
 }
+
+
 class Aresta{
     private Vertice fim;
     private Vertice inicio;
@@ -59,6 +65,8 @@ class Aresta{
          this.inicio = inicio;
      }
 }
+
+
 class Grafo{
     private ArrayList<Vertice> vertices;
     private ArrayList<Aresta> arestas;
@@ -122,29 +130,103 @@ class Grafo{
 
 
 }
+
+
 class Tp01Grafos{
-    public static void main(String[] args) {
-        Grafo grafo = new Grafo();
+   public static void main(String[] args) {
+      Grafo grafo = new Grafo();
 
-      Scanner entrada = new Scanner(System.in);
-      int numTotalVertices = entrada.nextInt();
-      //System.out.println(numTotalVertices);
-      int numTotalArestas = entrada.nextInt();
-      //System.out.println(numTotalArestas);
+      File file = new File("graph-test-50000.txt");
+      Scanner sc = new Scanner(System.in);
 
-      for(int i=1; i < numTotalVertices + 1; i++){
-         grafo.adicionarVertices(i);
+      try{
+         Scanner entrada = new Scanner(file);
+         int numTotalVertices = entrada.nextInt();
+         //System.out.println(numTotalVertices);
+         int numTotalArestas = entrada.nextInt();
+         //System.out.println(numTotalArestas);
+
+         for(int i=1; i < numTotalVertices + 1; i++){
+            grafo.adicionarVertices(i);
+         }
+
+         for(int i = 0; i < numTotalArestas; i++){
+            int numVerticeInicio = entrada.nextInt();
+            //System.out.println(numVerticeInicio);
+            int numVerticeSaida = entrada.nextInt();
+            //System.out.println(numVerticeSaida);
+            grafo.adicionarArestas(numVerticeInicio, numVerticeSaida);
+
+         }
+
+         entrada.close();
+      }catch(Exception e){
+         System.out.println(e.getMessage());
       }
 
-      for(int i = 0; i < numTotalArestas; i++){
-         int numVerticeInicio = entrada.nextInt();
-         //System.out.println(numVerticeInicio);
-         int numVerticeSaida = entrada.nextInt();
-         //System.out.println(numVerticeSaida);
-         grafo.adicionarArestas(numVerticeInicio, numVerticeSaida);
+      ArrayList<Vertice> percorridos = new ArrayList<Vertice>();
 
+      System.out.println("digite1");
+      int um = sc.nextInt();
+
+      System.out.println("digite2");
+      int dois = sc.nextInt();
+      
+
+      System.out.println("resultado: " + acharCiclo(um, dois, grafo, false, false, grafo.getVertice(um), percorridos));
+      System.out.println("(0 significa que não há ciclo)");
+      System.out.println("(1 significa que há ciclo)");
+      System.out.println("(3 significa houve um erro)");
+
+      sc.close();
+
+   }
+
+   public static int acharCiclo(int inicio, int destino, Grafo grafo, boolean containsVInicio, boolean containsVDestino, Vertice atual, ArrayList<Vertice> percorridos){
+
+      //System.out.println("chamado: " + atual);
+      try{
+        // Vertice tmp = grafo.getVertice(inicio);
+         // for (int j=0; j<percorridos.size(); j++) {
+         //    int curr = percorridos.get(j).getDado();
+         
+         //    System.out.println(curr);
+         // }
+         percorridos.add(atual);
+         ArrayList<Aresta> arestasSaida = atual.getArestasSaida();
+         for(int i=0; i<arestasSaida.size(); i++){
+            if(arestasSaida.get(i).getFim().getDado() == destino){
+               containsVDestino = true;
+            }
+            else if(arestasSaida.get(i).getFim().getDado() == inicio){
+               if(containsVDestino){
+                  containsVInicio = true;
+                  return 1;
+               }
+            }
+            if(percorridos.contains(arestasSaida.get(i).getFim())){
+               // System.out.println("dadwa");
+               // System.out.println(arestasSaida.get(i).getFim().getDado());
+               // System.out.println("chegou: ");
+               // return 2;
+               // break;
+            }
+            else{
+               int result = acharCiclo(inicio, destino, grafo, containsVInicio, containsVDestino, arestasSaida.get(i).getFim(), percorridos);
+               //System.out.println(result);
+               if(result == 1){
+                  return result;
+               }
+               else if(result == 0){
+                  return result;
+               }
+            }
+         }
+      }catch(Exception e){
+         return 3;
       }
 
 
-    }
+      return 0;
+   }
 }
